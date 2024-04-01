@@ -1,21 +1,21 @@
-import os
-import re
-import time
+import argparse
 import json
 import logging
-import argparse
+import os
+import re
 import subprocess
-from datetime import datetime
+import time
+from datetime import datetime, date
 from urllib.parse import urlparse
 
 import requests
 from rich import print
-from rich.table import Table
-from rich.markdown import Markdown
 from rich.logging import RichHandler
+from rich.markdown import Markdown
+from rich.table import Table
 from rich_argparse import RichHelpFormatter
 
-from . import __author__, __about__, __version__
+from . import __author__, __version__
 
 # Construct path to the user's home directory
 PROGRAM_DIRECTORY = os.path.expanduser(os.path.join("~", "tor2tor"))
@@ -42,9 +42,11 @@ def load_settings() -> dict:
 
 def create_parser() -> argparse.ArgumentParser:
     from . import __version__, __epilog__, __description__
+
     parser = argparse.ArgumentParser(
         description=Markdown(__description__, "argparse.text"),
-        epilog=Markdown(__epilog__), formatter_class=RichHelpFormatter
+        epilog=Markdown(__epilog__),
+        formatter_class=RichHelpFormatter,
     )
     parser.add_argument("onion", help="onion url to scrape")
     parser.add_argument(
@@ -78,7 +80,12 @@ def create_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "-d", "--debug", help="run program in debug mode", action="store_true"
     )
-    parser.add_argument("-v", "--version", version=__version__, action="version")
+    parser.add_argument(
+        "-v",
+        "--version",
+        version=f"Tor2Tor v{__version__} Copyright (c) 2023-{date.today().year} {__author__}",
+        action="version",
+    )
     return parser
 
 
